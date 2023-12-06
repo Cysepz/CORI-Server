@@ -14,8 +14,13 @@ sql.pool.query('SELECT 1+1 AS solution', (error,results) => {
   console.log('DB Connnection is OK');
 });
 
+// ----- 載入 Router File -----
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+const userRouter = require('./routes/userRouter');
+const activityRouter = require('./routes/activityRouter');
+const reportRouter = require('./routes/reportRouter');
+const permissionRouter = require('./routes/permissionRouter');
 
 var app = express();
 
@@ -29,8 +34,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// ----- 使用 Router -----
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/api/user', userRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
