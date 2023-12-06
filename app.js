@@ -4,6 +4,16 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+// ----- 環境變數 -----
+require('dotenv').config();
+var sql = require('./mysql');
+
+// 測試資料庫連線是否成功
+sql.pool.query('SELECT 1+1 AS solution', (error,results) => {
+  if(error) throw error;
+  console.log('DB Connnection is OK');
+});
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
