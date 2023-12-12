@@ -55,16 +55,46 @@ class UserController{
   login = async (req, res) => {
     const { userId, password } = req.body;        // 取得用戶輸入資料
     try {
-      const result = await userModel.readUserIdPwd(userId, password);
-      // req.session.userId=result[0].userId;
-      if(result) {
-        res.json(result[0]);
-      } else {
-        res.status(405).json({ "result": "login fail" });
+      const suspension = await userModel.readBlacklist(userId); // 檢查使用者是否於黑名單當中
+      const result = await userModel.readPwd(userId, password); // 登入
+      if (suspension) {
+        res.json({
+          success: false,
+          error: {
+            message: "Login fail: 使用者停權中",
+          }
+        });
+      } else if(result === 0){
+        res.json({
+          success: true,
+          data: {
+            token: userId,
+          }
+        });
+      } else if(result === 1){
+        res.json({
+          success: false,
+          error: {
+            message: "Login fail: Wrong password",
+          }
+        });
+      } else if(result === 2){
+        res.json({
+          success: false,
+          error: {
+            message: "Login fail: account not found",
+          }
+        });
+      } else{
+        res.json({
+          success: false,
+          error: {
+            message: "Login fail: DB error",
+          }
+        });
       }
     } catch (error) {
       res.status(405).json({ "result": "login fail" });
-      console.log(error);
     }      
   }
 }
