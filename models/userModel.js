@@ -81,13 +81,6 @@ class UserModel {
     })
   }
 
-  update(memberData){
-
-  }
-
-  delete(memberData) {
-
-  }
 }
 
 module.exports = new UserModel();

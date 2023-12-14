@@ -1,6 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 const userModel = require('../models/userModel');
+const authModel = require('../models/authModel');
 
 const router = express.Router();
 router.use(bodyParser.json());
@@ -65,10 +68,18 @@ class UserController{
           }
         });
       } else if(result === 0){
-        res.json({
+        const token =  jwt.sign({userId:userId}, "coriSecret1227"); // 產生 JWT token
+        const tokenStoration = await authModel.updateToken(userId, token); // 將 token 存進 DB
+        const expirationTime = new Date(Date.now() + 60 * 60 * 72 * 1000); // 三天後過期
+        res.cookie("token", token, {
+          expires: expirationTime,
+          httpOnly: true,
+          secure: true,
+          sameSite: "strict",
+        }).json({
           success: true,
           data: {
-            token: userId,
+            token: token,
           }
         });
       } else if(result === 1){

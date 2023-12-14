@@ -5,5 +5,9 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
+router.post('/secret', function(req, res, next) {
+  res.render("secret.ejs");
+});
+
 
 module.exports = router;
