@@ -9,8 +9,8 @@ require('dotenv').config();
 var sql = require('./mysql');
 
 // 測試資料庫連線是否成功
-sql.pool.query('SELECT 1+1 AS solution', (error,results) => {
-  if(error) throw error;
+sql.pool.query('SELECT 1+1 AS solution', (error, results) => {
+  if (error) throw error;
   console.log('DB Connnection is OK');
 });
 
@@ -39,14 +39,16 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/api/user', userRouter);
 app.use('/api/activity', activityRouter);
+app.use('/api/permission', permissionRouter);
+app.use('/api/report', reportRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
