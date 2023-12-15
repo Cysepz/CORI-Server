@@ -63,9 +63,7 @@ class ReportModel {
                         resolve(3);
                     } else {
                         resolve(4);
-
                     }
-
                 }
             });
         })

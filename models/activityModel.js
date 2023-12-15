@@ -28,15 +28,16 @@ class activityModel {
       let startOfTime;
       let endOfTime;
       if (time === ""){ // time 為空值
-        startOfTime = "1523-12-18 16:59:59.999";
+        startOfTime = new Date();
         endOfTime = "2523-12-18 16:59:59.999";
       } else{
         const reqDateTime = new Date(time);
         startOfTime = new Date(reqDateTime);
-        startOfTime.setMinutes(-60, 0, -1); // 設為整點的開始
+        startOfTime.setMinutes(-120, 0, -1); // 設為整點的開始
         endOfTime = new Date(startOfTime);
-        endOfTime.setHours(endOfTime.getHours() + 3);
+        endOfTime.setHours(endOfTime.getHours() + 4);
       }
+      console.log(`startOfTime: ${startOfTime}, endOfTime: ${endOfTime}`);
 
       const query = 'SELECT * FROM rideshare WHERE departure LIKE ? AND destination LIKE ? AND time BETWEEN ? AND ?';
       const params = [dept, dest, startOfTime, endOfTime];
@@ -120,13 +121,13 @@ class activityModel {
   // postAct_P model
   async createAct_P(userId, dept, dest, time, seats, carType, payment, memo){ // 乘客發起共乘
     const passengerData = {
-      passenger: userId
+      "1": userId
     };
     const jsonString = JSON.stringify(passengerData, null, 2);
     console.log(jsonString);
     return new Promise((resolve, reject) => {
       const query = 'INSERT INTO `rideshare` (`sponsor`, `passenger`, `departure`, `destination`, `time`, `category`, `seats`, `payment`, `memo`) VALUES (false,?,?,?,?,?,?,?,?)';
-      const params = [passengerData, dept, dest, time, carType, seats, payment, memo];
+      const params = [jsonString, dept, dest, time, carType, seats, payment, memo];
     
       sql.pool.query(query, params, (error, result) => {
         if (error) {

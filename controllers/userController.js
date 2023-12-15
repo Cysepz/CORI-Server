@@ -11,7 +11,7 @@ router.use(bodyParser.json());
 
 class UserController {
   signup = async (req, res) => {
-    const { userId, username, gender, email, phone, password} = req.body;  // 取得用戶輸入資料
+    const { userId, username, gender, email, phone, password } = req.body;  // 取得用戶輸入資料
     try {
       const duplicateUser = await userModel.readUserId(userId); // 帳號重複檢查
       if (duplicateUser) {
