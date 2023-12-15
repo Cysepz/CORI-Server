@@ -16,7 +16,7 @@ class ReportController {  //winnie
                 res.json({ "result": "respondent has been suspended" });
             }
             else {
-                const rideshareExist = await reportModel.readRideshareid(rideshareid, respondent, userId); //行程編號是否存在&被檢舉人是否有這個行程&檢舉人是否在這個行程
+                const rideshareExist = await reportModel.readRideshareid(rideshareid, respondent, userId); //行程編號是否存在
                 console.log(rideshareExist);
                 if (rideshareExist == 1) {//行程編號不存在
                     res.json({ "result": "Rideshareid didn't exist" });
@@ -105,7 +105,7 @@ class ReportController {  //winnie
                         data: result
 
                     });
-                    console.log("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
+
                 }
                 else {
                     res.json({
@@ -208,10 +208,20 @@ class ReportController {  //winnie
             else if (result == 2) {//被檢舉者不在黑名單
                 const respondentcreate = await reportModel.createBlacklist(respondent); //新增黑名單
                 if (respondentcreate) {
-                    res.json({
-                        success: true
-                        //,respondentcreate 
-                    });
+                    const modifyReport = await reportModel.updateReportStatus(reportId, respondent); //更新檢舉資料表status
+                    if (modifyReport) {
+                        res.json({
+                            success: true //, result
+                        });
+                    }
+                    else {
+                        res.json({
+                            success: false,
+                            error: {
+                                message: "reportPass fail:updateReportStatus fail",
+                            }
+                        });
+                    }
                 }
                 else {
                     res.json({

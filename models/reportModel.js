@@ -258,6 +258,8 @@ class ReportModel {
             //const informant = '1';
             const params = [reportId, respondent];
             const query = 'UPDATE report SET status = 1 WHERE report_id = ? AND respondent= ?';
+            console.log(reportId);
+            console.log(respondent);
             sql.pool.query(query, params, (error, result) => {
                 if (error) {
                     console.error('updateReportStatus 失敗', error);

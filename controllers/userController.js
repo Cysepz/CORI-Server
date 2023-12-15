@@ -9,9 +9,9 @@ const activityModel = require('../models/activityModel');
 const router = express.Router();
 router.use(bodyParser.json());
 
-class UserController{
+class UserController {
   signup = async (req, res) => {
-    const { userId, username, gender, email, phone, password, scanRes} = req.body;  // 取得用戶輸入資料
+    const { userId, username, gender, email, phone, password, scanRes } = req.body;  // 取得用戶輸入資料
     try {
       const duplicateUser = await userModel.readUserId(userId); // 帳號重複檢查
       if (duplicateUser) {
@@ -21,21 +21,21 @@ class UserController{
             message: "Signup fail: duplicate user",
           }
         });
-      } else if (userId === scanRes){ // 檢查學生證掃描結果
-          const result = await userModel.createUser(userId, username, gender, email, phone, password);  // 創建使用者
-          if (result) {
-            res.json({
-              success: true,
-              // data: result
-            });
-          } else {
-            res.json({
-              success: false,
-              error: {
-                message: "Signup fail : DB error",
-              }
-            });
-          }  
+      } else if (userId === scanRes) { // 檢查學生證掃描結果
+        const result = await userModel.createUser(userId, username, gender, email, phone, password);  // 創建使用者
+        if (result) {
+          res.json({
+            success: true,
+            // data: result
+          });
+        } else {
+          res.json({
+            success: false,
+            error: {
+              message: "Signup fail : DB error",
+            }
+          });
+        }
       }
       else {
         res.json({
@@ -68,8 +68,8 @@ class UserController{
             message: "Login fail: 使用者停權中",
           }
         });
-      } else if(result === 0){
-        const token =  jwt.sign({userId:userId}, "coriSecret1227"); // 產生 JWT token
+      } else if (result === 0) {
+        const token = jwt.sign({ userId: userId }, "coriSecret1227"); // 產生 JWT token
         const tokenStoration = await authModel.updateToken(userId, token); // 將 token 存進 DB
         const expirationTime = new Date(Date.now() + 60 * 60 * 72 * 1000); // 三天後過期
         res.cookie("token", token, {
@@ -83,21 +83,21 @@ class UserController{
             token: token,
           }
         });
-      } else if(result === 1){
+      } else if (result === 1) {
         res.json({
           success: false,
           error: {
             message: "Login fail: Wrong password",
           }
         });
-      } else if(result === 2){
+      } else if (result === 2) {
         res.json({
           success: false,
           error: {
             message: "Login fail: account not found",
           }
         });
-      } else{
+      } else {
         res.json({
           success: false,
           error: {
@@ -107,7 +107,7 @@ class UserController{
       }
     } catch (error) {
       res.status(405).json({ "result": "login fail" });
-    }      
+    }
   }
 
   adminLogin = async (req, res) => {  // 管理員登入
@@ -122,8 +122,8 @@ class UserController{
             message: "Admin Login fail: 你不是管理員，請嘗試用一般使用者登入",
           }
         });
-      } else if(result === 0){
-        const token =  jwt.sign({userId:userId}, "coriSecret1227"); // 產生 JWT token
+      } else if (result === 0) {
+        const token = jwt.sign({ userId: userId }, "coriSecret1227"); // 產生 JWT token
         const tokenStoration = await authModel.updateToken(userId, token); // 將 token 存進 DB
         const expirationTime = new Date(Date.now() + 60 * 60 * 72 * 1000); // 三天後過期
         res.cookie("token", token, {
@@ -137,21 +137,21 @@ class UserController{
             token: token,
           }
         });
-      } else if(result === 1){
+      } else if (result === 1) {
         res.json({
           success: false,
           error: {
             message: "Admin login fail: Wrong password",
           }
         });
-      } else if(result === 2){
+      } else if (result === 2) {
         res.json({
           success: false,
           error: {
             message: "Admin login fail: account not found",
           }
         });
-      } else{
+      } else {
         res.json({
           success: false,
           error: {
@@ -161,11 +161,47 @@ class UserController{
       }
     } catch (error) {
       res.status(405).json({ "result": "login fail" });
-    }      
+    }
   }
 
   updateUserInfo = async (req, res) => {
-   
+    const { userId, userName, email, gender, phone, password } = req.body;        // 取得用戶輸入資料
+    if (userName === '' & email === '' & gender === '' & phone === '' & password === '') {
+      res.json({
+        success: false,
+        error: {
+          message: "updateUserInfo fail: params null",
+        }
+      });
+    }
+    else {
+      try {
+        console.log("2222222222222222222222222222222222");
+        const result = await userModel.updateUser(userId, userName, email, gender, phone, password); // 
+        console.log("1111111111111111111111111111");
+        if (result) {
+          res.json({
+            success: true,
+            data: result
+          });
+        } else {
+          res.json({
+            success: false,
+            error: {
+              message: "updateUserInfo fail: updateUser fail",
+            }
+          });
+        }
+        //}  
+      } catch (error) {
+        res.status(405).json({
+          success: false,
+          error: {
+            message: "updateUserInfo fail: 斷開API連接",
+          }
+        });
+      }
+    }
   }
 
   applyForDriver = async (req, res) => {
@@ -181,11 +217,11 @@ class UserController{
         });
       } else {
         const result = await userModel.createDriver(userId, carId, seat, charge); // 創建司機身分
-        if (result){
+        if (result) {
           res.json({
             success: true,
           });
-        } else{
+        } else {
           res.json({
             success: false,
             error: {
@@ -193,18 +229,73 @@ class UserController{
             }
           });
         }
-      }  
+      }
     } catch (error) {
       res.status(405).json({ "result": "login fail" });
-    }      
+    }
   }
 
-  showMyAct_P = async (req, res) => {
-    
+  showMyAct_P = async (req, res) => { //顯示我的活動
+    const { userId } = req.body;
+    try {
+      // 獲取由用戶創建的報告
+      const result = await userModel.getPassengerHistory(userId);
+      if (result) {
+        // 回應檢索到的報告
+        res.json({ success: true, result });
+        //res.json(result);
+      }
+
+      else {
+        res.json({
+          success: false,
+          error: {
+            message: "showMyAct_P fail:getPassengerHistory fail",
+          }
+        });
+      }
+
+    } catch (error) {
+      res.status(405).json({
+        success: false,
+        error: {
+          message: "showMyAct_P fail: 斷開API連接",
+        }
+      });
+      console.log(error);
+    }
   }
+
 
   showMyAct_D = async (req, res) => {
-    
+    const { userId } = req.body;
+    try {
+      // 獲取由用戶創建的報告
+      const result = await userModel.getDriverHistory(userId);
+      if (result) {
+        // 回應檢索到的報告
+        res.json({ success: true, result });
+        //res.json(result);
+      }
+
+      else {
+        res.json({
+          success: false,
+          error: {
+            message: "showMyAct_D fail:getDriverHistory fail",
+          }
+        });
+      }
+
+    } catch (error) {
+      res.status(405).json({
+        success: false,
+        error: {
+          message: "showMyAct_D fail: 斷開API連接",
+        }
+      });
+      console.log(error);
+    }
   }
 
   showMyCar = async (req, res) => {
@@ -216,7 +307,7 @@ class UserController{
           success: true,
           data: result
         });
-      } else{
+      } else {
         res.json({
           success: false,
           error: {
@@ -226,7 +317,7 @@ class UserController{
       }
     } catch (error) {
       res.status(405).json({ "result": "login fail" });
-    }      
+    }
   }
 }
 
