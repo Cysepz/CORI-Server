@@ -81,6 +81,55 @@ class UserModel {
     })
   }
 
+  async readAdmin(userId){ // 檢查重複使用者
+    return new Promise((resolve, reject) => {
+      const query = 'SELECT * FROM administrator WHERE user_id = ?';
+      const params = [userId];
+
+      sql.pool.query(query, params, (error, result) => {
+        if (error) {  // 如果發生錯誤，將錯誤信息傳遞給回呼函數
+          reject(error);
+        } else { 
+          if(result.length != 0){ // 帳號已存在
+            resolve(true);
+          } else { resolve(false);} // 帳號不存在
+        }
+      });
+    })
+  }
+
+  async createDriver(userId, carId, seat, charge){ // 註冊
+    return new Promise((resolve, reject) => {
+      const query = 'INSERT INTO `driver` (`user_id`, `car_id`, `seats`, `charges`, `category`) VALUES (?,?,?,?,?)';
+      const params = [userId, carId, seat, charge, 1];
+    
+      sql.pool.query(query, params, (error, result) => {
+        if (error) {
+          console.log('createDriver query 失敗');
+          reject(error);
+        } else {
+          console.log('createDriver query 成功');
+          resolve(result);
+        }
+      });
+    })
+  }
+
+  async readCarInfo(userId){ // 查詢該司機的車子資訊
+    return new Promise((resolve, reject) => {
+      const query = 'SELECT * FROM driver WHERE user_id = ?';
+      const params = [userId];
+
+      sql.pool.query(query, params, (error, result) => {
+        if (error) {
+          reject(error);
+        } else { 
+          resolve(result[0]);
+        }
+      });
+    })
+  }
+
 }
 
 module.exports = new UserModel();
