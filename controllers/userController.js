@@ -37,14 +37,6 @@ class UserController {
           });
         }
       }
-      else {
-        res.json({
-          success: false,
-          error: {
-            message: "Signup fail: ID mismatch",
-          }
-        });
-      }
     } catch (error) {
       res.status(405).json({
         success: false,
@@ -205,7 +197,7 @@ class UserController {
   }
 
   applyForDriver = async (req, res) => {
-    const { userId, carId, seat, charge } = req.body;        // 取得用戶輸入資料
+    const { userId, carId, seat, charge, category } = req.body;        // 取得用戶輸入資料
     try {
       const driverExist = await activityModel.readDriverId(userId); // 檢查司機是否存在
       if (driverExist) {
