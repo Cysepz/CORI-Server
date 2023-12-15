@@ -98,10 +98,10 @@ class UserModel {
     })
   }
 
-  async createDriver(userId, carId, seat, charge) { // 註冊
+  async createDriver(userId, carId, seat, charge, category) { // 註冊
     return new Promise((resolve, reject) => {
       const query = 'INSERT INTO `driver` (`user_id`, `car_id`, `seats`, `charges`, `category`) VALUES (?,?,?,?,?)';
-      const params = [userId, carId, seat, charge, 1];
+      const params = [userId, carId, seat, charge, category];
 
       sql.pool.query(query, params, (error, result) => {
         if (error) {
