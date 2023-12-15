@@ -23,7 +23,7 @@ class UserModel {
   async createUser(userId, username, gender, email, phone, password) { // 註冊
     return new Promise((resolve, reject) => {
       bcrypt.hash(password, 10).then(function (hash) { // 加密密碼
-        const query = 'INSERT INTO `user` (`user_id`, `username`, `gender`, `email`, `phone`, `password`) VALUES (?,?,?,?,?,?)';
+        const query = 'INSERT INTO `user` (`user_id`, `username`, `gender`, `email`, `phone`, `password`, `token`) VALUES (?,?,?,?,?,?,NULL)';
         const params = [userId, username, gender, email, phone, hash];
 
         sql.pool.query(query, params, (error, result) => {
