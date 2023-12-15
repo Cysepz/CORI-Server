@@ -56,11 +56,37 @@ class ReportModel {
                     console.log('readRideshareCheck query 失敗');
                     reject(error);
                 } else {  // 成功時將查詢結果傳遞給回呼函數
+                    console.log(result);
                     console.log('readRideshareCheck query 成功');
                     if (result.length === 0) { //如果沒有這個行程編號
+
                         resolve(3);
                     } else {
                         resolve(4);
+
+                    }
+
+                }
+            });
+        })
+    }
+
+    async checkDupliExistReport(rideshareid, respondent, userId) { // 檢查檢舉者是否重複檢舉別人
+        return new Promise((resolve, reject) => {
+            const query = 'SELECT * FROM report WHERE rideshare_id=? and respondent =? and informant =? ';
+            const params = [rideshareid, respondent, userId];
+            sql.pool.query(query, params, (error, result) => {
+                if (error) {  // 如果發生錯誤，將錯誤信息傳遞給回呼函數
+                    console.log('checkDupliExistReport query 失敗');
+                    reject(error);
+                } else {  // 成功時將查詢結果傳遞給回呼函數
+                    console.log('checkDupliExistReport query 成功');
+                    console.log(result);
+                    if (result.length === 0) { //如果沒有這個檢舉
+
+                        resolve(5);
+                    } else {
+                        resolve(6);
 
                     }
 

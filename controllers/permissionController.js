@@ -33,7 +33,7 @@ class PermissionController {
                 res.json({
                     success: false,
                     error: {
-                        message: "showAllBlacklist fail:readAdmin fail",
+                        message: "showAllBlacklist fail:you are not admin",
                     }
                 });
             }
@@ -87,7 +87,7 @@ class PermissionController {
                 res.json({
                     success: false,
                     error: {
-                        message: "recoverUser fail:readAdmin fail",
+                        message: "recoverUser fail:you are not admin",
                     }
                 });
             }
