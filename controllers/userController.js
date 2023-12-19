@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const userModel = require('../models/userModel');
-const authModel = require('../models/authModel');
+const authModel = require('../models/authModel'); //winnie
 const activityModel = require('../models/activityModel');
 
 const router = express.Router();
@@ -156,7 +156,8 @@ class UserController {
   }
 
   updateUserInfo = async (req, res) => {
-    const { userId, userName, email, gender, phone, password } = req.body;        // 取得用戶輸入資料
+    // const { userId, userName, email, gender, phone, password } = req.body;        // 取得用戶輸入資料 winnie
+    const { userName, email, gender, phone, password } = req.body;        // 取得用戶輸入資料 winnie
     if (userName === '' & email === '' & gender === '' & phone === '' & password === '') {
       res.json({
         success: false,
@@ -167,23 +168,33 @@ class UserController {
     }
     else {
       try {
-        console.log("2222222222222222222222222222222222");
-        const result = await userModel.updateUser(userId, userName, email, gender, phone, password); // 
-        console.log("1111111111111111111111111111");
-        if (result) {
-          res.json({
-            success: true,
-            data: result
-          });
-        } else {
+        /*winnie start*/
+        const userId = await authModel.readToken(req);
+        if (userId === "") {  // 驗證登入失敗
           res.json({
             success: false,
             error: {
-              message: "updateUserInfo fail: updateUser fail",
+              message: "Token error",
             }
           });
-        }
-        //}  
+        } else {  // 驗證登入成功
+          /*winnie end*/
+          const result = await userModel.updateUser(userId, userName, email, gender, phone, password); // 
+          if (result) {
+            res.json({
+              success: true,
+              data: result
+            });
+          } else {
+            res.json({
+              success: false,
+              error: {
+                message: "updateUserInfo fail: updateUser fail",
+              }
+            });
+          }
+          //}  
+        }//winnie
       } catch (error) {
         res.status(405).json({
           success: false,
@@ -196,56 +207,80 @@ class UserController {
   }
 
   applyForDriver = async (req, res) => {
-    const { userId, carId, seat, charge, category } = req.body;        // 取得用戶輸入資料
+    // const { userId, carId, seat, charge, category } = req.body;        // 取得用戶輸入資料 winnie
+    const { carId, seat, charge, category } = req.body;        // 取得用戶輸入資料 winnie
     try {
-      const driverExist = await activityModel.readDriverId(userId); // 檢查司機是否存在
-      if (driverExist) {
+      /*winnie start*/
+      const userId = await authModel.readToken(req);
+      if (userId === "") {  // 驗證登入失敗
         res.json({
           success: false,
           error: {
-            message: "Apply For Driver fail: 你已經有司機身分了",
+            message: "Token error",
           }
         });
-      } else {
-        const result = await userModel.createDriver(userId, carId, seat, charge, category); // 創建司機身分
-        if (result) {
-          res.json({
-            success: true,
-          });
-        } else {
+      } else {  // 驗證登入成功
+        /*winnie end*/
+        const driverExist = await activityModel.readDriverId(userId); // 檢查司機是否存在
+        if (driverExist) {
           res.json({
             success: false,
             error: {
-              message: "Apply For Driver fail : DB error",
+              message: "Apply For Driver fail: 你已經有司機身分了",
             }
           });
+        } else {
+          const result = await userModel.createDriver(userId, carId, seat, charge, category); // 創建司機身分
+          if (result) {
+            res.json({
+              success: true,
+            });
+          } else {
+            res.json({
+              success: false,
+              error: {
+                message: "Apply For Driver fail : DB error",
+              }
+            });
+          }
         }
-      }
+      }//winnie
     } catch (error) {
       res.status(405).json({ "result": "Apply For Driver fail" });
     }
   }
 
   showMyAct_P = async (req, res) => { //顯示我的活動
-    const { userId } = req.body;
+    // const { userId } = req.body; //winnie
     try {
-      // 獲取由用戶創建的報告
-      const result = await userModel.getPassengerHistory(userId);
-      if (result) {
-        // 回應檢索到的報告
-        res.json({ success: true, result });
-        //res.json(result);
-      }
-
-      else {
+      /*winnie start*/
+      const userId = await authModel.readToken(req);
+      if (userId === "") {  // 驗證登入失敗
         res.json({
           success: false,
           error: {
-            message: "showMyAct_P fail:getPassengerHistory fail",
+            message: "Token error",
           }
         });
-      }
+      } else {  // 驗證登入成功
+        /*winnie end*/
+        // 獲取由用戶創建的報告
+        const result = await userModel.getPassengerHistory(userId);
+        if (result) {
+          // 回應檢索到的報告
+          res.json({ success: true, result });
+          //res.json(result);
+        }
 
+        else {
+          res.json({
+            success: false,
+            error: {
+              message: "showMyAct_P fail:getPassengerHistory fail",
+            }
+          });
+        }
+      }//winnie
     } catch (error) {
       res.status(405).json({
         success: false,
@@ -259,25 +294,36 @@ class UserController {
 
 
   showMyAct_D = async (req, res) => {
-    const { userId } = req.body;
+    // const { userId } = req.body; //winnie
     try {
-      // 獲取由用戶創建的報告
-      const result = await userModel.getDriverHistory(userId);
-      if (result) {
-        // 回應檢索到的報告
-        res.json({ success: true, result });
-        //res.json(result);
-      }
-
-      else {
+      /*winnie start*/
+      const userId = await authModel.readToken(req);
+      if (userId === "") {  // 驗證登入失敗
         res.json({
           success: false,
           error: {
-            message: "showMyAct_D fail:getDriverHistory fail",
+            message: "Token error",
           }
         });
-      }
+      } else {  // 驗證登入成功
+        /*winnie end*/
+        // 獲取由用戶創建的報告
+        const result = await userModel.getDriverHistory(userId);
+        if (result) {
+          // 回應檢索到的報告
+          res.json({ success: true, result });
+          //res.json(result);
+        }
 
+        else {
+          res.json({
+            success: false,
+            error: {
+              message: "showMyAct_D fail:getDriverHistory fail",
+            }
+          });
+        }
+      }//winnie
     } catch (error) {
       res.status(405).json({
         success: false,
@@ -290,22 +336,34 @@ class UserController {
   }
 
   showMyCar = async (req, res) => {
-    const { userId } = req.body;        // 取得用戶輸入資料
+    //const { userId } = req.body;        // 取得用戶輸入資料 winnie 
     try {
-      const result = await userModel.readCarInfo(userId); // 檢查使用者是否於黑名單當中
-      if (result) {
-        res.json({
-          success: true,
-          data: result
-        });
-      } else {
+      /*winnid start*/
+      const userId = await authModel.readToken(req);
+      if (userId === "") {  // 驗證登入失敗
         res.json({
           success: false,
           error: {
-            message: "Show My Car fail: DB error",
+            message: "Token error",
           }
         });
-      }
+      } else {  // 驗證登入成功
+        /*winnid end*/
+        const result = await userModel.readCarInfo(userId); // 檢查使用者是否於黑名單當中
+        if (result) {
+          res.json({
+            success: true,
+            data: result
+          });
+        } else {
+          res.json({
+            success: false,
+            error: {
+              message: "Show My Car fail: DB error",
+            }
+          });
+        }
+      }//winnie
     } catch (error) {
       res.status(405).json({ "result": "login fail" });
     }
