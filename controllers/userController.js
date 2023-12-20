@@ -97,7 +97,12 @@ class UserController {
         });
       }
     } catch (error) {
-      res.status(405).json({ "result": "login fail" });
+      res.status(405).json({
+        success: false,
+        error: {
+          message: "login fail",
+        }
+      });
     }
   }
 
@@ -151,7 +156,12 @@ class UserController {
         });
       }
     } catch (error) {
-      res.status(405).json({ "result": "login fail" });
+      res.status(405).json({
+        success: false,
+        error: {
+          message: "adminLogin fail",
+        }
+      });
     }
   }
 
@@ -246,7 +256,12 @@ class UserController {
         }
       }//winnie
     } catch (error) {
-      res.status(405).json({ "result": "Apply For Driver fail" });
+      res.status(405).json({
+        success: false,
+        error: {
+          message: "Apply For Driver fail",
+        }
+      });
     }
   }
 
@@ -371,7 +386,14 @@ class UserController {
         }
       }//winnie
     } catch (error) {
-      res.status(405).json({ "result": "login fail" });
+
+      res.json({
+        success: false,
+        error: {
+          message: "showMyCar fail",
+        }
+      });
+
     }
   }
 }

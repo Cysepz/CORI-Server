@@ -96,12 +96,14 @@ class ReportModel {
 
 
 
-    async createReport(rideshareid, respondent, content) { // 新增檢舉
+    async createReport(rideshareid, respondent, content, userId) { // 新增檢舉
         //抓informant (檢舉者的user_id)
-        const informant = '1';
+        //const informant = '1';
         return new Promise((resolve, reject) => {
             const query = 'INSERT INTO `report` (`rideshare_id`, `content`,`informant`, `respondent`,`status`) VALUES (?,?,?,?,0)';
-            const params = [rideshareid, content, informant, respondent];
+            const params = [rideshareid, content, userId, respondent];
+
+            console.log(userId);
             sql.pool.query(query, params, (error, result) => {
                 if (error) {  // 如果發生錯誤，將錯誤信息傳遞給回呼函數
                     console.log('createReport query 失敗');

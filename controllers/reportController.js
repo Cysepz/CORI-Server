@@ -9,11 +9,14 @@ router.use(bodyParser.json());
 
 class ReportController {  //winnie
     addReport = async (req, res) => { //新增檢舉
+        console.log(req.body);
         // const { rideshareid, respondent, content, userId } = req.body;    // 取得用戶輸入檢舉資料 winnie
         const { rideshareid, respondent, content } = req.body;    // 取得用戶輸入檢舉資料 winnie
         try {
             /*winnie start*/
             const userId = await authModel.readToken(req);
+
+            console.log(userId);
             if (userId === "") {  // 驗證登入失敗
                 res.json({
                     success: false,
@@ -35,25 +38,48 @@ class ReportController {  //winnie
                     const blacklistStatus = await reportModel.readBlacklistStatus(respondent); //被檢舉人是否停權
                     console.log(blacklistStatus);
                     if (blacklistStatus) { //如果黑名單的人已經被停權
-                        res.json({ "result": "respondent has been suspended" });
+                        res.json({
+                            success: false,
+                            error: {
+                                message: "respondent has been suspended",
+                            }
+                        });
+
                     }
                     else {
                         const rideshareExist = await reportModel.readRideshareid(rideshareid, respondent, userId); //行程編號是否存在
                         console.log(rideshareExist);
                         if (rideshareExist == 1) {//行程編號不存在
-                            res.json({ "result": "Rideshareid didn't exist" });
+                            res.json({
+                                success: false,
+                                error: {
+                                    message: "Rideshareid didn't exist",
+                                }
+                            });
                         }
                         else {
                             console.log(respondent);
                             const respondentExist = await reportModel.readRideshareCheck(rideshareid, respondent); //被檢舉人是否有這個行程
                             if (respondentExist == 3) {
-                                res.json({ "result": "respondent is not related to this rideshareid" });//被檢舉人不存在在行程裡
+                                res.json({
+                                    success: false,
+                                    error: {
+                                        message: "respondent is not related to this rideshareid",
+                                    }
+                                });
+                                //被檢舉人不存在在行程裡
                             }
                             else {
 
                                 const informantExist = await reportModel.readRideshareCheck(rideshareid, userId); //檢舉人是否在這個行程
                                 if (informantExist == 3) {
-                                    res.json({ "result": "you are not in this rideshareid" });//檢舉人不存在在行程裡
+                                    res.json({
+                                        success: false,
+                                        error: {
+                                            message: "you are not in this rideshareid",
+                                        }
+                                    });
+                                    //檢舉人不存在在行程裡
                                 }
                                 else {
 
@@ -67,7 +93,9 @@ class ReportController {  //winnie
                                         });
                                     }
                                     else {
-                                        const result = await reportModel.createReport(rideshareid, respondent, userId);//新增至檢舉資料表
+
+                                        console.log(userId);
+                                        const result = await reportModel.createReport(rideshareid, respondent, content, userId);//新增至檢舉資料表
                                         if (result) {
                                             res.json({
                                                 success: true,
