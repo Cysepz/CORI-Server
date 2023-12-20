@@ -268,7 +268,10 @@ class UserController {
         const result = await userModel.getPassengerHistory(userId);
         if (result) {
           // 回應檢索到的報告
-          res.json({ success: true, result });
+          res.json({
+            success: true,
+            data: result
+          });
           //res.json(result);
         }
 
@@ -311,7 +314,10 @@ class UserController {
         const result = await userModel.getDriverHistory(userId);
         if (result) {
           // 回應檢索到的報告
-          res.json({ success: true, result });
+          res.json({
+            success: true,
+            data: result
+          });
           //res.json(result);
         }
 

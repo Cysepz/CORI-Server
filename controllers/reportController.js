@@ -69,7 +69,10 @@ class ReportController {  //winnie
                                     else {
                                         const result = await reportModel.createReport(rideshareid, respondent, userId);//新增至檢舉資料表
                                         if (result) {
-                                            res.json(result);
+                                            res.json({
+                                                success: true,
+                                                data: result
+                                            });
                                         } else {
                                             res.json({
                                                 success: false,
@@ -162,7 +165,6 @@ class ReportController {  //winnie
                         res.json({
                             success: true,
                             data: result
-
                         });
 
                     }
@@ -345,50 +347,6 @@ class ReportController {  //winnie
             console.log(error);
         }
     }
-
-    // recoverUser = async (req, res) => { // 管理員復權使用者
-    //     const { userId } = req.body;
-    //     try {
-    //         const result = await reportModel.getRecoverUser();
-    //         if (result == 1) { //復權時間小於現在時間資料
-    //             // 回應成功消息 
-    //             const recoverdata = await reportModel.updateRecoverUser();
-    //             if (recoverdata) {
-    //                 //res.json({ "result": " recover user success" });
-    //                 res.json({
-    //                     success: true
-    //                 });
-    //             }
-    //             else {
-    //                 res.json({
-    //                     success: false,
-    //                     error: {
-    //                         message: "recoverUser fail:recover user fail",
-    //                     }
-    //                 });
-    //             }
-
-    //         }
-    //         else {
-    //             res.json({
-    //                 success: false,
-    //                 error: {
-    //                     message: "recoverUser fail:getRecoverUser fail",
-    //                 }
-    //             });
-    //         }
-
-    //     } catch (error) {
-    //         res.status(405).json({
-    //             success: false,
-    //             error: {
-    //                 message: "recoverUser fail",
-    //             }
-    //         });
-    //         console.log(error);
-    //     }
-    // }
-
 
 }
 

@@ -28,7 +28,10 @@ class PermissionController {
                     const result = await permissionModel.getAllBlacklist(userId);
                     if (result) {
                         // 回應檢索到的報告
-                        res.json({ success: true, result });
+                        res.json({
+                            success: true,
+                            data: result
+                        });
                         //res.json(result);
                     }
 
