@@ -48,6 +48,7 @@ class UserController {
   }
 
   login = async (req, res) => {
+    console.log(req.body);
     const { userId, password } = req.body;        // 取得用戶輸入資料
     try {
       const suspension = await userModel.readBlacklist(userId); // 檢查使用者是否於黑名單當中
@@ -371,7 +372,14 @@ class UserController {
       } else {  // 驗證登入成功
         /*winnid end*/
         const result = await userModel.readCarInfo(userId); // 檢查使用者是否於黑名單當中
-        if (result) {
+        if (result === 0) {
+          res.json({
+            success: false,
+            error: {
+              message: "show My Car Fail: You ar not driver",
+            }
+          });
+        } else if(result) {
           res.json({
             success: true,
             data: result

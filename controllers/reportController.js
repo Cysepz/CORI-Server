@@ -227,6 +227,7 @@ class ReportController {  //winnie
 
     reportPass = async (req, res) => { // 管理員審核檢舉通過
         //const { reportId } = req.params; // 假設 reportId 是檢舉報告的唯一識別符
+        console.log(req.body);
         const { reportId, respondent } = req.body;
         try {
             const result = await reportModel.readBlacklist(respondent); //檢查被檢舉者是否已在黑名單
@@ -297,6 +298,7 @@ class ReportController {  //winnie
             }
             else if (result == 2) {//被檢舉者不在黑名單
                 const respondentcreate = await reportModel.createBlacklist(respondent); //新增黑名單
+                console.log("..................................."+respondent);
                 if (respondentcreate) {
                     const modifyReport = await reportModel.updateReportStatus(reportId, respondent); //更新檢舉資料表status
                     if (modifyReport) {

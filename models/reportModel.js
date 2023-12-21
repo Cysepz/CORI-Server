@@ -187,6 +187,7 @@ class ReportModel {
 
 
     async readBlacklist(respondent) { // 檢查被檢舉者是否已在黑名單
+        console.log("Read Black List");
         return new Promise((resolve, reject) => {
             const query = 'SELECT * FROM blacklist WHERE user_id = ?';
             const params = [respondent];
@@ -206,6 +207,7 @@ class ReportModel {
         })
     }
     async updateBlacklist(respondent) {  //更新黑名單
+        console.log("update Black List");
         return new Promise((resolve, reject) => {
             const params = [respondent];
             const query = 'UPDATE blacklist SET count = count + 1 WHERE user_id = ?';
@@ -224,8 +226,10 @@ class ReportModel {
 
     async createBlacklist(respondent) {  //新增黑名單
         return new Promise((resolve, reject) => {
-            const params = [respondent];
             const query = 'INSERT INTO `blacklist` (`user_id`, `count`, `status`) VALUES (?, 1, 0)';
+            console.log("//////////////////////////////////" + respondent);
+            const params = [respondent];
+
             sql.pool.query(query, params, (error, result) => {
                 if (error) {
                     console.error('createBlacklist 失敗', error);

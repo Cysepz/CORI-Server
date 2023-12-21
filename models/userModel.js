@@ -119,12 +119,14 @@ class UserModel {
     return new Promise((resolve, reject) => {
       const query = 'SELECT * FROM driver WHERE user_id = ?';
       const params = [userId];
-
       sql.pool.query(query, params, (error, result) => {
         if (error) {
           reject(error);
         } else {
-          resolve(result[0]);
+          if(result.length != 0){
+            resolve(result[0])
+          }
+          resolve(0);
         }
       });
     })
