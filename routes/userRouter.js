@@ -9,6 +9,7 @@ router.post('/adminLogin', userController.adminLogin);
 router.post('/updateUserInfo', userController.updateUserInfo);
 router.post('/applyForDriver', userController.applyForDriver);
 router.post('/showMyCar', userController.showMyCar);
+router.post('/editMyCar', userController.editMyCar);
 router.post('/showMyAct_P', userController.showMyAct_P);
 router.post('/showMyAct_D', userController.showMyAct_D);
 

@@ -166,9 +166,6 @@ class UserModel {
           }
         });
       });
-
-
-
     })
   }
 
@@ -208,22 +205,37 @@ class UserModel {
     })
   }
 
-  // async updateBlacklist(respondent) {  //更新黑名單
-  //   return new Promise((resolve, reject) => {
-  //     const params = [respondent];
-  //     const query = 'UPDATE blacklist SET count = count + 1 WHERE user_id = ?';
-  //     sql.pool.query(query, params, (error, result) => {
-  //       if (error) {
-  //         console.error('updateBlacklist 失敗', error);
-  //         reject(error);
-  //       } else {
-  //         console.log('updateBlacklist 成功');
-  //         resolve(result);
-  //         //resolve(true);
-  //       }
-  //     });
-  //   });
-  // }
+  async updateDriver(userId, carId, seat, charge, category) {  //更新黑名單
+    return new Promise((resolve, reject) => {
+      let query = "UPDATE driver SET ";
+      const params = [userId, carId, seat, charge, category];
+      if (carId !== '') {
+        query += "car_id ='" + params[1] + "',";
+      }
+      if (seat !== '') {
+        query += "seats ='" + params[2] + "',";
+      }
+      if (charge !== '') {
+        query += "charges = '" + params[3] + "',";
+      }
+      if (category !== '') {
+        query += "category ='" + params[4] + "',";
+      }
+      query += "WHERE user_id= '" + params[0] + "'";
+      query = query.replace(',WHERE', 'WHERE');
+
+      sql.pool.query(query, (error, result) => {
+        if (error) {
+          console.error('updateDriver 失敗', error);
+          reject(error);
+        } else {
+          console.log('updateDriver 成功');
+          if(result) resolve(true);
+          else resolve(false);
+        }
+      });
+    })
+  }
 
 }
 

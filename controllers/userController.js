@@ -404,6 +404,64 @@ class UserController {
 
     }
   }
+
+  editMyCar = async (req, res) => {
+    const { carId, seat, charge, category } = req.body;        // 取得用戶輸入資料 winnie
+    if (carId === '' & seat === '' & charge === '' & category === '') {
+      res.json({
+        success: false,
+        error: {
+          message: "editMyCar fail: params null",
+        }
+      });
+    }
+    else {
+      try {
+        /*winnie start*/
+        const userId = await authModel.readToken(req);
+        if (userId === "") {  // 驗證登入失敗
+          res.json({
+            success: false,
+            error: {
+              message: "Token error",
+            }
+          });
+        } else {  // 驗證登入成功
+          /*winnie end*/
+          const driverExist = await activityModel.readDriverId(userId); // 檢查司機是否存在
+          if (!driverExist) {
+            res.json({
+              success: false,
+              error: {
+                message: "editMyCar fail: 沒有司機身分",
+              }
+            });
+          } else {
+            const result = await userModel.updateDriver(userId, carId, seat, charge, category); // 
+            if (result) {
+              res.json({
+                success: true
+              });
+            } else {
+              res.json({
+                success: false,
+                error: {
+                  message: "editMyCar fail: DB error",
+                }
+              });
+            }
+          }
+        }
+      } catch (error) {
+        res.status(405).json({
+          success: false,
+          error: {
+            message: "editMyCar fail",
+          }
+        });
+      }
+    }
+  }
 }
 
 module.exports = new UserController();
