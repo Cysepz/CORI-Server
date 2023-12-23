@@ -37,7 +37,6 @@ class activityModel {
         endOfTime = new Date(startOfTime);
         endOfTime.setHours(endOfTime.getHours() + 4);
       }
-      console.log(`startOfTime: ${startOfTime}, endOfTime: ${endOfTime}`);
 
       const query = 'SELECT * FROM rideshare WHERE departure LIKE ? AND destination LIKE ? AND time BETWEEN ? AND ?';
       const params = [dept, dest, startOfTime, endOfTime];

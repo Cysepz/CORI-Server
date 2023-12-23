@@ -67,7 +67,7 @@ class UserController {
         res.cookie("token", token, {
           expires: expirationTime,
           httpOnly: true,
-          secure: true,
+          // secure: true,
           sameSite: "strict",
         }).json({
           success: true,

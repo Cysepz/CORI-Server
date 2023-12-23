@@ -56,10 +56,8 @@ class ReportModel {
                     console.log('readRideshareCheck query 失敗');
                     reject(error);
                 } else {  // 成功時將查詢結果傳遞給回呼函數
-                    console.log(result);
                     console.log('readRideshareCheck query 成功');
                     if (result.length === 0) { //如果沒有這個行程編號
-
                         resolve(3);
                     } else {
                         resolve(4);

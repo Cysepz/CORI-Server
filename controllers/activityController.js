@@ -46,8 +46,8 @@ class activityController {
             message: "Token error",
           }
         });
+        console.log("token error");
       } else {  // 驗證登入成功
-        console.log(userId);
         const result = await activityModel.readAct(dept, dest, time); // 檢查司機是否存在
         if (result) {
           res.json({
@@ -61,6 +61,7 @@ class activityController {
               message: "Search act fail : DB error",
             }
           });
+          console.log("Search act fail : DB error");
         }
       }
     } catch (error) {
@@ -101,6 +102,7 @@ class activityController {
               message: "Post act by driver fail: permission deny (you don't have driverID)",
             }
           });
+          console.log("Post act by driver fail: permission deny (you don't have driverID)");
         } else if (!carExist) {
           res.json({
             success: false,
@@ -108,6 +110,7 @@ class activityController {
               message: "Post act by driver fail: carId doesn't exist",
             }
           });
+          console.log("Post act by driver fail: carId doesn't exist");
         } else {
           const currentTime = new Date();
           const givenTime = new Date(time);
@@ -118,12 +121,14 @@ class activityController {
                 message: "Post act by driver fail: 不能新增過去時間的行程",
               }
             });
+            console.log("Post act by driver fail: 不能新增過去時間的行程");
           } else {
             const result = await activityModel.createAct_D(userId, dept, dest, time, seats, carId, carType, payment, memo);  // 創建活動
             if (result) {
               res.json({
                 success: true,
               });
+              console.log("Post act by driver success");
             } else {
               res.json({
                 success: false,
@@ -131,6 +136,7 @@ class activityController {
                   message: "Post act by driver fail : DB error",
                 }
               });
+              console.log("Post act by driver fail: DB error");
             }
           }
         }
@@ -142,6 +148,7 @@ class activityController {
           message: "Post act by driver fail",
         }
       });
+      console.log("Post act by driver fail");
       console.log(error);
     }
   }
@@ -159,6 +166,7 @@ class activityController {
             message: "Token error",
           }
         });
+        console.log("Token error");
       } else {  // 驗證登入成功
         /*winnie end*/
         const currentTime = new Date();
@@ -170,12 +178,14 @@ class activityController {
               message: "Post act by passenger fail: 不能新增過去時間的行程",
             }
           });
+          console.log("Post act by passenger fail: 不能新增過去時間的行程");
         } else {
           const result = await activityModel.createAct_P(userId, dept, dest, time, seats, carType, payment, memo);  // 列出所有由乘客發起的共乘行程
           if (result) {
             res.json({
               success: true,
             });
+            console.log("Post act by passenger success");
           } else {
             res.json({
               success: false,
@@ -183,6 +193,8 @@ class activityController {
                 message: "Post act by passenger fail: DB error",
               }
             });
+            console.log("Post act by passenger fail: DB error");
+
           }
         }
       } //winnie add
@@ -193,6 +205,7 @@ class activityController {
           message: "Post act by passenger act fail",
         }
       });
+      console.log("Post act by passenger fail");
       console.log(error);
     }
   }
@@ -211,6 +224,7 @@ class activityController {
             message: "Token error",
           }
         });
+        console.log("token error");
       } else {  // 驗證登入成功
         /*winnie end*/
         const driverExist = await activityModel.readDriverId(userId); // 檢查是否具有司機身分
@@ -221,6 +235,7 @@ class activityController {
               message: "Join act by driver fail: permission deny (you don't have driverID)",
             }
           });
+          console.log("Join act by driver fail: permission deny (you don't have driverID)");
         } else {
           const full = await activityModel.readDriverFromAct(rideshareId);  // 檢查此行程是否已有司機
           if (full) {
@@ -230,6 +245,7 @@ class activityController {
                 message: "Join act by driver fail: 行程已經有司機了",
               }
             });
+            console.log("Join act by driver fail: 行程已經有司機了");
           } else {
             const userExistInAct = await reportModel.readRideshareCheck(rideshareId, userId);
             if (userExistInAct == 4) {
@@ -239,6 +255,7 @@ class activityController {
                   message: "Join act by driver fail: 您已經在此行程中了",
                 }
               });
+              console.log("Join act by driver fail: 您已經在此行程中了");
             } else {
               const carId = await activityModel.readCarId(userId);
               const result = await activityModel.updateAct_D(userId, rideshareId, carId);  // 將司機加入共乘行程
@@ -246,6 +263,7 @@ class activityController {
                 res.json({
                   success: true,
                 });
+                console.log("Join act by driver success");
               } else {
                 res.json({
                   success: false,
@@ -253,6 +271,7 @@ class activityController {
                     message: "Join act by driver fail: DB error",
                   }
                 });
+                console.log("Join act by driver fail: DB error");
               }
             }
           }
@@ -316,6 +335,7 @@ class activityController {
               });
             } else {
               parsedPassList[passLen + 1] = userId; // 新增乘客
+              // parsedPassList[(passLen + 1).toString()] = userId.toString(); // 新增乘客
               passList.passenger = JSON.stringify(parsedPassList);  // 更新 passList 的 JSON 字符串
               const result = await activityModel.updateAct_P(rideshareId, parsedPassList, seat - 1); // 更新共乘行程的乘客名單，並將座位數 -1
               if (result) {
