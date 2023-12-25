@@ -205,14 +205,14 @@ class activityModel {
   }
   async readPassFromAct(rideshareId) { // 查詢某共乘行程的當前乘客列表
     return new Promise((resolve, reject) => {
-      const query = 'SELECT * FROM rideshare WHERE rideshare_id = ?';
+      const query = 'SELECT passenger FROM rideshare WHERE rideshare_id = ?';
       const params = [rideshareId];
 
       sql.pool.query(query, params, (error, result) => {
         if (error) {
           reject(error);
         } else {
-          resolve(result[0].passenger);
+          resolve(result[0]);
         }
       });
     })
