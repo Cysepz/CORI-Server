@@ -123,10 +123,26 @@ class UserModel {
         if (error) {
           reject(error);
         } else {
-          if(result.length != 0){
+          if (result.length != 0) {
             resolve(result[0])
           }
           resolve(0);
+        }
+      });
+    })
+  }
+
+  async readUserInfo(userId) { // 檢查重複使用者
+    return new Promise((resolve, reject) => {
+      const query = 'SELECT username, gender, email, phone FROM user WHERE user_id = ?';
+      const params = [userId];
+
+      sql.pool.query(query, params, (error, result) => {
+        if (error) {  // 如果發生錯誤，將錯誤信息傳遞給回呼函數
+          reject(error);
+        } else {
+          console.log(result)
+          resolve(result[0]);
         }
       });
     })
@@ -230,7 +246,7 @@ class UserModel {
           reject(error);
         } else {
           console.log('updateDriver 成功');
-          if(result) resolve(true);
+          if (result) resolve(true);
           else resolve(false);
         }
       });

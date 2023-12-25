@@ -7,6 +7,7 @@ router.post('/signup', userController.signup);
 router.post('/login', userController.login);
 router.post('/adminLogin', userController.adminLogin);
 router.post('/updateUserInfo', userController.updateUserInfo);
+router.post('/showUserInfo', userController.showUserInfo);
 router.post('/applyForDriver', userController.applyForDriver);
 router.post('/showMyCar', userController.showMyCar);
 router.post('/editMyCar', userController.editMyCar);

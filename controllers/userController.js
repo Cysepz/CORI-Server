@@ -166,6 +166,45 @@ class UserController {
     }
   }
 
+  showUserInfo = async (req, res) => {
+    try {
+      /*winnie start*/
+      const userId = await authModel.readToken(req);
+      if (userId === "") {  // 驗證登入失敗
+        res.json({
+          success: false,
+          error: {
+            message: "Token error",
+          }
+        });
+      } else {  // 驗證登入成功
+        /*winnie end*/
+        const result = await userModel.readUserInfo(userId); // 抓取使用者資料 
+        if (result) {
+          res.json({
+            success: true,
+            data: result
+          });
+        } else {
+          res.json({
+            success: false,
+            error: {
+              message: "readUserInfo fail: readUserInfo fail",
+            }
+          });
+        }
+        //}  
+      }//winnie
+    } catch (error) {
+      res.status(405).json({
+        success: false,
+        error: {
+          message: "readUserInfo fail: 斷開API連接",
+        }
+      });
+    }
+  }
+
   updateUserInfo = async (req, res) => {
     // const { userId, userName, email, gender, phone, password } = req.body;        // 取得用戶輸入資料 winnie
     const { userName, email, gender, phone, password } = req.body;        // 取得用戶輸入資料 winnie
@@ -381,7 +420,7 @@ class UserController {
             }
           });
           console.log("show My Car Fail: You ar not driver");
-        } else if(result) {
+        } else if (result) {
           res.json({
             success: true,
             data: result

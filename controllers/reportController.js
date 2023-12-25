@@ -26,7 +26,7 @@ class ReportController {  //winnie
                 });
             } else {  // 驗證登入成功
                 /*winnie end*/
-                if (respondent === userId) {
+                if (respondent === userId.toString()) {
                     res.json({
                         success: false,
                         error: {
@@ -298,7 +298,7 @@ class ReportController {  //winnie
             }
             else if (result == 2) {//被檢舉者不在黑名單
                 const respondentcreate = await reportModel.createBlacklist(respondent); //新增黑名單
-                console.log("..................................."+respondent);
+                console.log("..................................." + respondent);
                 if (respondentcreate) {
                     const modifyReport = await reportModel.updateReportStatus(reportId, respondent); //更新檢舉資料表status
                     if (modifyReport) {
