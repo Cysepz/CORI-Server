@@ -66,7 +66,7 @@ class UserController {
         const expirationTime = new Date(Date.now() + 60 * 60 * 72 * 1000); // 三天後過期
         res.cookie("token", token, {
           expires: expirationTime,
-          httpOnly: true,
+          httpOnly: false,
           // secure: true,
           sameSite: "strict",
         }).json({
@@ -125,7 +125,7 @@ class UserController {
         const expirationTime = new Date(Date.now() + 60 * 60 * 72 * 1000); // 三天後過期
         res.cookie("token", token, {
           expires: expirationTime,
-          httpOnly: true,
+          httpOnly: false,
           secure: true,
           sameSite: "strict",
         }).json({
@@ -369,6 +369,7 @@ class UserController {
             message: "Token error",
           }
         });
+        console.log("token error");
       } else {  // 驗證登入成功
         /*winnid end*/
         const result = await userModel.readCarInfo(userId); // 檢查使用者是否於黑名單當中
@@ -379,11 +380,13 @@ class UserController {
               message: "show My Car Fail: You ar not driver",
             }
           });
+          console.log("show My Car Fail: You ar not driver");
         } else if(result) {
           res.json({
             success: true,
             data: result
           });
+          console.log("show My Car Success");
         } else {
           res.json({
             success: false,
@@ -391,6 +394,7 @@ class UserController {
               message: "Show My Car fail: DB error",
             }
           });
+          console.log("show My Car Fail: DB error")
         }
       }//winnie
     } catch (error) {
