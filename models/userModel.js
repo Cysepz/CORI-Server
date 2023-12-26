@@ -141,7 +141,6 @@ class UserModel {
         if (error) {  // 如果發生錯誤，將錯誤信息傳遞給回呼函數
           reject(error);
         } else {
-          console.log(result)
           resolve(result[0]);
         }
       });
