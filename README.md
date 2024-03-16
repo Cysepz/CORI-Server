@@ -1,4 +1,9 @@
 # CORI
+- [Introduction](#Introduction)
+- [Installation](#Installation)
+- [Usage](#Usage)
+- [Contributing](#Contributing)
+
 ## Introduction
 * CORI 為中央學生專用共乘平台，採用 Node.js 作為後端開發環境，此連結用於儲存 CORI 後端程式碼
 * 前端程式碼連結https://github.com/SYUAN-NI/Carpool-in-NCU.git
@@ -29,16 +34,15 @@ Express
 - 安裝套件 `npm install`
   > 注意：要在正確的專案路徑底下輸入此指令
 - 設定環境變數
-  - 安裝 dotenv
-    - `npm install dotenv`
+  - 安裝 dotenv `npm install dotenv`
   - 建立 `.env` 文件：在專案根目錄下創建一個名為 `[fileName].env` 的文件，並在其中設定環境變數，例如
+    > 注意：.env 文件中的變數不區分大小寫
     ```
     PORT=3000
     DB_USER=mydatabaseuser
     DB_PASSWORD=mypassword
     ```
-    > 注意：.env 文件中的變數不區分大小寫
-
+    
 ## Usage
 - 進入專案資料夾
 - `npm run start`
